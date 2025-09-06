@@ -13,7 +13,13 @@ HEADERS = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/js
 
 # 🔹 Worker: envía los mensajes una vez
 def enviar_mensajes():
-    df = pd.read_csv(SHEET_URL)
+    print("🚀 Iniciando envío de mensajes...")
+    try:
+        df = pd.read_csv(SHEET_URL)
+    except Exception as e:
+        print(f"❌ Error al leer la hoja: {e}")
+        return
+
     enviados = set()
 
     for _, row in df.iterrows():
@@ -24,24 +30,26 @@ def enviar_mensajes():
             continue
 
         payload = {"to": numero, "text": mensaje}
-        response = requests.post(API_URL, json=payload, headers=HEADERS)
-
-        print(f"Enviado a {numero}: {response.text}")
+        try:
+            response = requests.post(API_URL, json=payload, headers=HEADERS)
+            print(f"✅ Enviado a {numero}: {response.text}")
+        except Exception as e:
+            print(f"❌ Error con {numero}: {e}")
 
         enviados.add(numero)
-        time.sleep(60)
+        time.sleep(60)  # Espera 1 min entre mensajes
 
-    print("✅ Todos los mensajes enviados.")
+    print("🎉 Todos los mensajes enviados.")
 
-# 🔹 Lanzar worker en un hilo
-threading.Thread(target=enviar_mensajes).start()
+# 🔹 Lanzar worker en un hilo para no bloquear Flask
+threading.Thread(target=enviar_mensajes, daemon=True).start()
 
 # 🔹 Flask “dummy” para Render
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Worker ejecutándose 🚀"
+    return "Worker ejecutándose 🚀 (solo se ejecuta una vez)"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
