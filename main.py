@@ -7,8 +7,8 @@ import os
 
 # 🔹 Configuración
 SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLN4AQYAIb-etfCO_Fvjn62FoCvb4EIsBm28mE1cPiQuGT9wDwfQsEKUiyX0ZdMQ/pub?output=csv"
-API_KEY = "bb9700866ecd82bbe0028531233949c16ec09590d86deaa456e65b45a8d2aad1"
-API_URL = "https://wasenderapi.com/api/send-message"
+API_KEY = "nk4en5y6x7vv6gdr"
+API_URL = "https://api.ultramsg.com/instance142311/"
 HEADERS = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
 
 # 🔹 Worker: envía los mensajes una vez
